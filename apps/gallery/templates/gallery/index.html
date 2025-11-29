@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Página inicial{% endblock title %}
+
+{% block content %}
+
+    <h1>Página inicial</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="get">
+                <input
+                    type="text"
+                    name="q"
+                    class="form-control mb-2"
+                    placeholder="Pesquisar conteúdo"
+                    value="{{ request.GET.q }}">
+            </form>
+
+            {% if request.GET.q %}
+                <a href="{% url "gallery:index" %}">Limpar filtros</a>
+            {% endif %}
+
+            <div class="row mt-3">
+                
+                {% for folder in folders %}
+                    <div class="col-md-3 card-hover mb-4">
+                        <a href="#" class="card text-decoration-none text-dark h-100">
+                            <div class="ratio ratio-1x1">
+                                <img src="https://placehold.co/600x400" class="card-img-top object-fit-cover">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ folder.folder_name }}</h5>
+                                
+                                <p class="card-text">
+                                    <small class="text-body-secondary d-flex align-items-center">
+                                        Postado por: <strong class="ms-1">{{ folder.user.username }}</strong>
+                                        
+                                        {% if folder.user.is_superuser %}
+                                            <span class="badge rounded-pill bg-danger ms-2">Superuser</span>
+                                        {% endif %}
+                                    </small>
+                                </p>
+                                <p class="card-text">
+                                    {{ folder.description|truncatechars:30|default:"N/A" }}
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-body-secondary">
+                                        Última atualização: <br>
+                                        {{ folder.updated_at|date }}
+                                    </small>
+                                </p>
+                            </div>
+                        </a>
+                    </div> 
+                {% endfor %}
+            
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
